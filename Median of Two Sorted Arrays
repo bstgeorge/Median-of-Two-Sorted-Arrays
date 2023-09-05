@@ -1,0 +1,46 @@
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number}
+ */
+var findMedianSortedArrays = function(nums1, nums2) {
+  // form combined array
+  let arrCombined = nums1.concat(nums2);
+  
+  // break combined array into individual arrays
+  let arr =[];
+  for (let i = 0; i < arrCombined.length; i++) {
+    arr.push([arrCombined[i]]);
+  }
+
+  // helper function to merge sub-arrays
+  let mergeSort = function (arr) {
+    let arr1 = arr.shift() || [];
+    let arr2 = arr.shift() || [];
+    let mergedArr = [];
+    while (arr1.length > 0 || arr2.length > 0) {
+      if (arr1.length >= 1 && arr2.length === 0) {
+        mergedArr.push(arr1.shift());
+      } else if (arr1.length === 0 && arr2.length >= 1) {
+        mergedArr.push(arr2.shift());
+      } else if (arr1[0] < arr2[0]) {
+        mergedArr.push(arr1.shift());
+      } else {
+        mergedArr.push(arr2.shift());
+      };
+    }
+    arr.push(mergedArr);
+    if (arr.length === 1) {
+      let middle = Math.floor(arr[0].length / 2);
+      if (arr[0].length % 2 === 0) {
+        return ((arr[0][middle - 1] + arr[0][middle])/2)
+      } else {
+        return (arr[0][middle])
+      }
+    } else {
+      return mergeSort(arr)
+    }
+  };
+
+  return mergeSort(arr);
+};
